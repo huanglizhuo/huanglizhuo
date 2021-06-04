@@ -7,8 +7,3 @@
 This is Huang,an software engineer, vimer
 
 who loves leaning a lot of different tech 
-
-Mobile Frontend, Distribution System, ML...
-
-reacntly learning ray tracing for fun
-
