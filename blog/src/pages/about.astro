@@ -1,39 +1,36 @@
 ---
-import Layout from '../layouts/BlogPost.astro';
+import { getEntry, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import config from "@/config";
+
+const about = await getEntry("pages", "about");
+
+if (!about) {
+  throw new Error(
+    "Missing content entry: `about.md` or `about.mdx` in `src/content/pages/`"
+  );
+}
+
+const { Content } = await render(about);
 ---
 
 <Layout
-	title="About Me"
-	description="About Huang — software engineer and builder of OctoCounts, EchoPod, Ketsuin, and QwenASR."
-	pubDate={new Date('August 09 2026')}
+  title={`${about.data.title} | ${config.site.title}`}
+  description={about.data.description}
+  ogImage={about.data.ogImage}
+  canonicalURL={about.data.canonicalURL}
 >
-	<p>
-		I'm Huang, a software engineer who enjoys learning different things and turning side projects
-		into real products.
-	</p>
+  <Header />
 
-	<p>Things I've built:</p>
-	<ul>
-		<li>
-			<a href="https://octocounts.com/">OctoCounts</a> — a free SLOC counter for public GitHub
-			repositories, as a web app and a browser extension.
-		</li>
-		<li>
-			<a href="https://echopod.clothpath.com/">EchoPod</a> — language learning with AI subtitles,
-			built around your favorite podcasts.
-		</li>
-		<li>
-			<a href="https://ketsuin.clothpath.com/">Ketsuin 結印</a> — type with ninja hand signs,
-			detected in your browser.
-		</li>
-		<li>
-			<a href="https://github.com/huanglizhuo/QwenASR">QwenASR</a> — a pure-Rust, CPU-only
-			inference engine for Qwen3-ASR speech-to-text.
-		</li>
-	</ul>
+  <Breadcrumb />
 
-	<p>
-		You can find me on <a href="https://x.com/huang4fun">X</a> and
-		<a href="https://github.com/huanglizhuo">GitHub</a>.
-	</p>
+  <Main pageTitle={about.data.title} class="app-prose">
+    <Content />
+  </Main>
+
+  <Footer />
 </Layout>

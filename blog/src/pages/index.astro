@@ -1,128 +1,198 @@
 ---
-import { Image } from 'astro:assets';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-import echopodImg from '../assets/projects/echopod.png';
-import ketsuinImg from '../assets/projects/ketsuin.png';
-import octocountsImg from '../assets/projects/octocounts.png';
-import qwenasrImg from '../assets/projects/qwenasr.png';
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import IconRss from "@/assets/icons/IconRss.svg";
+import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Socials from "@/components/Socials.astro";
+import Card from "@/components/Card.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+import { Image } from "astro:assets";
+import octocountsImg from "@/assets/projects/octocounts.png";
+import echopodImg from "@/assets/projects/echopod.png";
+import ketsuinImg from "@/assets/projects/ketsuin.png";
+import qwenasrImg from "@/assets/projects/qwenasr.png";
 
 const projects = [
-	{
-		name: 'OctoCounts',
-		url: 'https://octocounts.com/',
-		domain: 'octocounts.com',
-		image: octocountsImg,
-		description:
-			'A free SLOC counter for public GitHub repositories. GitHub shows language bars but not actual line counts — OctoCounts fills that gap. Paste a repo URL and the Rust backend (Axum + Tokio) downloads the archive tarball, runs tokei across 200+ languages, and caches the report by commit SHA so repeat queries are instant. Also available as a Chrome / Edge / Firefox extension that adds a SLOC card directly to GitHub repo sidebars, with JSON / plain-text / PNG-badge export.',
-	},
-	{
-		name: 'EchoPod',
-		url: 'https://echopod.clothpath.com/',
-		domain: 'echopod.clothpath.com',
-		image: echopodImg,
-		description:
-			'A language-learning app built around AI subtitles. EchoPod turns your favorite podcasts into interactive bilingual study material: subtitles and playback stay in sync, and guided echoing sessions train your listening and speaking. Available on the iOS App Store, with an Android alpha program.',
-	},
-	{
-		name: 'Ketsuin 結印',
-		url: 'https://ketsuin.clothpath.com/',
-		domain: 'ketsuin.clothpath.com',
-		image: ketsuinImg,
-		description:
-			'A web-based input method that lets you type with ninja hand signs. Form one of the 12 classic seals in front of your webcam — a YOLOX-Nano model running on ONNX Runtime WebAssembly detects the sign entirely in your browser (no data leaves your device), and a T9 predictive engine maps sign sequences to text. Includes a challenge mode where you race hand-seal sequences against a global leaderboard.',
-	},
-	{
-		name: 'QwenASR',
-		url: 'https://github.com/huanglizhuo/QwenASR',
-		domain: 'github.com/huanglizhuo/QwenASR',
-		image: qwenasrImg,
-		description:
-			'A fast, pure-Rust, CPU-only inference engine for Qwen3-ASR speech-to-text, tuned for Apple Silicon with hand-written NEON / Accelerate / AMX-aware kernels — no Python, no GPU, no tensor framework, only libc. It transcribes a 28-second clip in 613 ms on an M5 Pro (46× realtime), beating GPU-based MLX implementations. Supports offline and streaming transcription, live capture with VAD, SRT/VTT subtitles, structured JSON, and forced alignment. Install with cargo install qwen-asr-cli.',
-	},
+  {
+    name: "OctoCounts",
+    url: "https://octocounts.com/",
+    domain: "octocounts.com",
+    image: octocountsImg,
+    description:
+      "A free SLOC counter for public GitHub repositories. GitHub shows language bars but not actual line counts — OctoCounts fills that gap. Paste a repo URL and the Rust backend (Axum + Tokio) downloads the archive tarball, runs tokei across 200+ languages, and caches the report by commit SHA so repeat queries are instant. Also available as a Chrome / Edge / Firefox extension that adds a SLOC card directly to GitHub repo sidebars, with JSON / plain-text / PNG-badge export.",
+  },
+  {
+    name: "EchoPod",
+    url: "https://echopod.clothpath.com/",
+    domain: "echopod.clothpath.com",
+    image: echopodImg,
+    description:
+      "A language-learning app built around AI subtitles. EchoPod turns your favorite podcasts into interactive bilingual study material: subtitles and playback stay in sync, and guided echoing sessions train your listening and speaking. Available on the iOS App Store, with an Android alpha program.",
+  },
+  {
+    name: "Ketsuin 結印",
+    url: "https://ketsuin.clothpath.com/",
+    domain: "ketsuin.clothpath.com",
+    image: ketsuinImg,
+    description:
+      "A web-based input method that lets you type with ninja hand signs. Form one of the 12 classic seals in front of your webcam — a YOLOX-Nano model running on ONNX Runtime WebAssembly detects the sign entirely in your browser (no data leaves your device), and a T9 predictive engine maps sign sequences to text. Includes a challenge mode where you race hand-seal sequences against a global leaderboard.",
+  },
+  {
+    name: "QwenASR",
+    url: "https://github.com/huanglizhuo/QwenASR",
+    domain: "github.com/huanglizhuo/QwenASR",
+    image: qwenasrImg,
+    description:
+      "A fast, pure-Rust, CPU-only inference engine for Qwen3-ASR speech-to-text, tuned for Apple Silicon with hand-written NEON / Accelerate / AMX-aware kernels — no Python, no GPU, no tensor framework, only libc. It transcribes a 28-second clip in 613 ms on an M5 Pro (46× realtime), beating GPU-based MLX implementations. Supports offline and streaming transcription, live capture with VAD, SRT/VTT subtitles, structured JSON, and forced alignment. Install with cargo install qwen-asr-cli.",
+  },
 ];
+
+const { socials, posts: postsConfig } = config;
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+const posts = await getCollection("posts");
+const sortedPosts = getSortedPosts(posts);
+const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
+const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
+const homePath = getRelativeLocaleUrl(locale, "");
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			.intro {
-				margin-bottom: 2.5em;
-			}
-			.intro h1 {
-				margin-bottom: 0.3em;
-			}
-			.intro p {
-				color: rgb(var(--gray));
-			}
-			.project {
-				display: flex;
-				flex-direction: column;
-				gap: 1em;
-				margin-bottom: 3em;
-			}
-			.project img {
-				display: block;
-				width: 100%;
-				height: auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.project h2 {
-				margin: 0 0 0.2em 0;
-				font-size: 1.5em;
-			}
-			.project h2 a {
-				color: rgb(var(--black));
-				text-decoration: none;
-			}
-			.project h2 a:hover {
-				color: var(--accent);
-			}
-			.domain {
-				margin: 0 0 0.6em 0;
-				font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-				font-size: 0.85em;
-				color: rgb(var(--gray));
-			}
-			.project p:last-child {
-				margin: 0;
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section class="intro">
-				<h1>Hi, I'm Huang</h1>
-				<p>
-					I build things for the web, for language learners, and for fun. Here are the projects I
-					work on — I also <a href="/blog">write notes</a> about what I learn along the way.
-				</p>
-			</section>
-			{
-				projects.map((project) => (
-					<section class="project">
-						<a href={project.url} target="_blank" rel="noopener">
-							<Image src={project.image} alt={`${project.name} preview`} widths={[720, 1440]} sizes="(max-width: 720px) 100vw, 720px" />
-						</a>
-						<div>
-							<h2>
-								<a href={project.url} target="_blank" rel="noopener">
-									{project.name}
-								</a>
-							</h2>
-							<p class="domain">{project.domain}</p>
-							<p>{project.description}</p>
-						</div>
-					</section>
-				))
-			}
-		</main>
-		<Footer />
-	</body>
-</html>
+<Layout>
+  <Header />
+  <main
+    id="main-content"
+    data-layout="index"
+    data-home-path={homePath}
+    class="app-layout my-1"
+  >
+    <section id="hero" class="border-border border-b pt-8 pb-6">
+      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
+        Hi, I'm Huang
+      </h1>
+      <a
+        target="_blank"
+        href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
+        class="inline-block"
+        aria-label="RSS Feed"
+        title="RSS Feed"
+      >
+        <IconRss
+          width={20}
+          height={20}
+          class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
+        />
+        <span class="sr-only">RSS Feed</span>
+      </a>
+
+      <p>
+        I build things for the web, for language learners, and for fun. Below
+        are the projects I work on — I also write notes about what I learn
+        along the way.
+      </p>
+      {
+        socials.length > 0 && (
+          <div class="mt-4 flex max-sm:flex-col sm:items-center">
+            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
+              {t.home.socialLinks}:
+            </div>
+            <Socials />
+          </div>
+        )
+      }
+    </section>
+
+    <section id="projects" class="border-border border-b pt-12 pb-6">
+      <h2 class="text-2xl font-semibold tracking-wide">Projects</h2>
+      {
+        projects.map(project => (
+          <div class="mt-8">
+            <a href={project.url} target="_blank" rel="noopener noreferrer">
+              <Image
+                src={project.image}
+                alt={`${project.name} preview`}
+                widths={[768, 1536]}
+                sizes="(max-width: 768px) 100vw, 768px"
+                class="border-border rounded-lg border"
+              />
+            </a>
+            <h3 class="mt-4 text-xl font-semibold">
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:text-accent"
+              >
+                {project.name}
+              </a>
+            </h3>
+            <p class="font-mono text-sm opacity-70">{project.domain}</p>
+            <p class="mt-2">{project.description}</p>
+          </div>
+        ))
+      }
+    </section>
+
+    {
+      featuredPosts.length > 0 && (
+        <section
+          id="featured"
+          class:list={[
+            "pt-12 pb-6",
+            { "border-border border-b": recentPosts.length > 0 },
+          ]}
+        >
+          <h2 class="text-2xl font-semibold tracking-wide">
+            {t.home.featured}
+          </h2>
+          <ul>
+            {featuredPosts.map(data => (
+              <Card variant="h3" {...data} />
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      recentPosts.length > 0 && (
+        <section id="recent-posts" class="pt-12 pb-6">
+          <h2 class="text-2xl font-semibold tracking-wide">
+            {t.home.recentPosts}
+          </h2>
+          <ul>
+            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
+              <Card variant="h3" {...data} />
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <div class="my-8 text-center">
+      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
+        {t.home.allPosts}
+        <IconArrowRight class="inline-block rtl:-rotate-180" />
+      </LinkButton>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
+      ?.dataset;
+    const baseRoot = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+    if (indexLayout?.layout) {
+      sessionStorage.setItem("backUrl", indexLayout.homePath ?? baseRoot);
+    }
+  });
+</script>
