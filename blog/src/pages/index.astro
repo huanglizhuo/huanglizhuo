@@ -1,48 +1,127 @@
 ---
+import { Image } from 'astro:assets';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import echopodImg from '../assets/projects/echopod.png';
+import ketsuinImg from '../assets/projects/ketsuin.png';
+import octocountsImg from '../assets/projects/octocounts.png';
+import qwenasrImg from '../assets/projects/qwenasr.png';
+
+const projects = [
+	{
+		name: 'OctoCounts',
+		url: 'https://octocounts.com/',
+		domain: 'octocounts.com',
+		image: octocountsImg,
+		description:
+			'A free SLOC counter for public GitHub repositories. GitHub shows language bars but not actual line counts — OctoCounts fills that gap. Paste a repo URL and the Rust backend (Axum + Tokio) downloads the archive tarball, runs tokei across 200+ languages, and caches the report by commit SHA so repeat queries are instant. Also available as a Chrome / Edge / Firefox extension that adds a SLOC card directly to GitHub repo sidebars, with JSON / plain-text / PNG-badge export.',
+	},
+	{
+		name: 'EchoPod',
+		url: 'https://echopod.clothpath.com/',
+		domain: 'echopod.clothpath.com',
+		image: echopodImg,
+		description:
+			'A language-learning app built around AI subtitles. EchoPod turns your favorite podcasts into interactive bilingual study material: subtitles and playback stay in sync, and guided echoing sessions train your listening and speaking. Available on the iOS App Store, with an Android alpha program.',
+	},
+	{
+		name: 'Ketsuin 結印',
+		url: 'https://ketsuin.clothpath.com/',
+		domain: 'ketsuin.clothpath.com',
+		image: ketsuinImg,
+		description:
+			'A web-based input method that lets you type with ninja hand signs. Form one of the 12 classic seals in front of your webcam — a YOLOX-Nano model running on ONNX Runtime WebAssembly detects the sign entirely in your browser (no data leaves your device), and a T9 predictive engine maps sign sequences to text. Includes a challenge mode where you race hand-seal sequences against a global leaderboard.',
+	},
+	{
+		name: 'QwenASR',
+		url: 'https://github.com/huanglizhuo/QwenASR',
+		domain: 'github.com/huanglizhuo/QwenASR',
+		image: qwenasrImg,
+		description:
+			'A fast, pure-Rust, CPU-only inference engine for Qwen3-ASR speech-to-text, tuned for Apple Silicon with hand-written NEON / Accelerate / AMX-aware kernels — no Python, no GPU, no tensor framework, only libc. It transcribes a 28-second clip in 613 ms on an M5 Pro (46× realtime), beating GPU-based MLX implementations. Supports offline and streaming transcription, live capture with VAD, SRT/VTT subtitles, structured JSON, and forced alignment. Install with cargo install qwen-asr-cli.',
+	},
+];
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			.intro {
+				margin-bottom: 2.5em;
+			}
+			.intro h1 {
+				margin-bottom: 0.3em;
+			}
+			.intro p {
+				color: rgb(var(--gray));
+			}
+			.project {
+				display: flex;
+				flex-direction: column;
+				gap: 1em;
+				margin-bottom: 3em;
+			}
+			.project img {
+				display: block;
+				width: 100%;
+				height: auto;
+				border-radius: 12px;
+				box-shadow: var(--box-shadow);
+			}
+			.project h2 {
+				margin: 0 0 0.2em 0;
+				font-size: 1.5em;
+			}
+			.project h2 a {
+				color: rgb(var(--black));
+				text-decoration: none;
+			}
+			.project h2 a:hover {
+				color: var(--accent);
+			}
+			.domain {
+				margin: 0 0 0.6em 0;
+				font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+				font-size: 0.85em;
+				color: rgb(var(--gray));
+			}
+			.project p:last-child {
+				margin: 0;
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+			<section class="intro">
+				<h1>Hi, I'm Huang</h1>
+				<p>
+					I build things for the web, for language learners, and for fun. Here are the projects I
+					work on — I also <a href="/blog">write notes</a> about what I learn along the way.
+				</p>
+			</section>
+			{
+				projects.map((project) => (
+					<section class="project">
+						<a href={project.url} target="_blank" rel="noopener">
+							<Image src={project.image} alt={`${project.name} preview`} widths={[720, 1440]} sizes="(max-width: 720px) 100vw, 720px" />
+						</a>
+						<div>
+							<h2>
+								<a href={project.url} target="_blank" rel="noopener">
+									{project.name}
+								</a>
+							</h2>
+							<p class="domain">{project.domain}</p>
+							<p>{project.description}</p>
+						</div>
+					</section>
+				))
+			}
 		</main>
 		<Footer />
 	</body>
