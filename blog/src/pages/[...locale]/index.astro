@@ -10,13 +10,18 @@ import Socials from "@/components/Socials.astro";
 import Card from "@/components/Card.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
-import { useTranslations } from "@/i18n";
+import { getPostLocale } from "@/utils/getPostPaths";
+import { getLocaleStaticPaths, useTranslations } from "@/i18n";
 import config from "@/config";
 import { Image } from "astro:assets";
 import octocountsImg from "@/assets/projects/octocounts.png";
 import echopodImg from "@/assets/projects/echopod.png";
 import ketsuinImg from "@/assets/projects/ketsuin.png";
 import qwenasrImg from "@/assets/projects/qwenasr.png";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
 
 const projects = [
   {
@@ -26,6 +31,8 @@ const projects = [
     image: octocountsImg,
     description:
       "A free SLOC counter for public GitHub repositories. GitHub shows language bars but not actual line counts — OctoCounts fills that gap. Paste a repo URL and the Rust backend (Axum + Tokio) downloads the archive tarball, runs tokei across 200+ languages, and caches the report by commit SHA so repeat queries are instant. Also available as a Chrome / Edge / Firefox extension that adds a SLOC card directly to GitHub repo sidebars, with JSON / plain-text / PNG-badge export.",
+    descriptionZh:
+      "一个免费的 GitHub 公开仓库代码行数统计工具。GitHub 只显示语言占比条，不给实际行数——OctoCounts 填补了这个空缺。粘贴仓库 URL，Rust 后端（Axum + Tokio）会下载归档包，用 tokei 统计 200 多种语言，并按 commit SHA 缓存报告，重复查询即时返回。同时提供 Chrome / Edge / Firefox 扩展，可直接在 GitHub 仓库侧栏显示 SLOC 卡片，支持 JSON / 纯文本 / PNG 徽章导出。",
   },
   {
     name: "EchoPod",
@@ -34,6 +41,8 @@ const projects = [
     image: echopodImg,
     description:
       "A language-learning app built around AI subtitles. EchoPod turns your favorite podcasts into interactive bilingual study material: subtitles and playback stay in sync, and guided echoing sessions train your listening and speaking. Available on the iOS App Store, with an Android alpha program.",
+    descriptionZh:
+      "一款围绕 AI 字幕打造的语言学习应用。EchoPod 把你喜欢的播客变成互动式双语学习材料：字幕与播放实时同步，引导式跟读练习训练听说能力。已上架 iOS App Store，Android 内测中。",
   },
   {
     name: "Ketsuin 結印",
@@ -42,6 +51,8 @@ const projects = [
     image: ketsuinImg,
     description:
       "A web-based input method that lets you type with ninja hand signs. Form one of the 12 classic seals in front of your webcam — a YOLOX-Nano model running on ONNX Runtime WebAssembly detects the sign entirely in your browser (no data leaves your device), and a T9 predictive engine maps sign sequences to text. Includes a challenge mode where you race hand-seal sequences against a global leaderboard.",
+    descriptionZh:
+      "一个用忍者手印打字的网页输入法。对着摄像头结出 12 种经典印之一——运行在 ONNX Runtime WebAssembly 上的 YOLOX-Nano 模型完全在浏览器内识别手势（数据不出设备），T9 预测引擎把印序列映射为文字。还有挑战模式，可以和全球排行榜比拼结印速度。",
   },
   {
     name: "QwenASR",
@@ -50,6 +61,8 @@ const projects = [
     image: qwenasrImg,
     description:
       "A fast, pure-Rust, CPU-only inference engine for Qwen3-ASR speech-to-text, tuned for Apple Silicon with hand-written NEON / Accelerate / AMX-aware kernels — no Python, no GPU, no tensor framework, only libc. It transcribes a 28-second clip in 613 ms on an M5 Pro (46× realtime), beating GPU-based MLX implementations. Supports offline and streaming transcription, live capture with VAD, SRT/VTT subtitles, structured JSON, and forced alignment. Install with cargo install qwen-asr-cli.",
+    descriptionZh:
+      "一个快速、纯 Rust、仅 CPU 的 Qwen3-ASR 语音转文字推理引擎，针对 Apple Silicon 优化，手写了 NEON / Accelerate / AMX 感知的内核——无 Python、无 GPU、无张量框架，只依赖 libc。在 M5 Pro 上 613 毫秒转写 28 秒音频（46 倍实时速度），超过基于 GPU 的 MLX 实现。支持离线和流式转写、带 VAD 的实时采集、SRT/VTT 字幕、结构化 JSON 和强制对齐。通过 cargo install qwen-asr-cli 安装。",
   },
 ];
 
@@ -57,9 +70,11 @@ const { socials, posts: postsConfig } = config;
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
+const isZh = locale === "zh";
 
 const posts = await getCollection("posts");
-const sortedPosts = getSortedPosts(posts);
+const localePosts = posts.filter(post => getPostLocale(post.filePath) === locale);
+const sortedPosts = getSortedPosts(localePosts);
 const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
 const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 const homePath = getRelativeLocaleUrl(locale, "");
@@ -75,11 +90,11 @@ const homePath = getRelativeLocaleUrl(locale, "");
   >
     <section id="hero" class="border-border border-b pt-8 pb-6">
       <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        Hi, I'm Huang
+        {isZh ? "你好，我是 Huang" : "Hi, I'm Huang"}
       </h1>
       <a
         target="_blank"
-        href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
+        href={getRelativeLocaleUrl(locale, "rss.xml")}
         class="inline-block"
         aria-label="RSS Feed"
         title="RSS Feed"
@@ -93,9 +108,11 @@ const homePath = getRelativeLocaleUrl(locale, "");
       </a>
 
       <p>
-        I build things for the web, for language learners, and for fun. Below
-        are the projects I work on — I also write notes about what I learn
-        along the way.
+        {
+          isZh
+          ? "我写 Mobile, Web, 胡乱写，主要为了好玩。下面是我正在做的项目，也会在这里记录些奇奇怪怪的内容"
+            : "I build things for the mobile, for the web, for language learners, and for fun. Below are the projects I work on — I also write notes about what I learn along the way."
+        }
       </p>
       {
         socials.length > 0 && (
@@ -110,7 +127,9 @@ const homePath = getRelativeLocaleUrl(locale, "");
     </section>
 
     <section id="projects" class="border-border border-b pt-12 pb-6">
-      <h2 class="text-2xl font-semibold tracking-wide">Projects</h2>
+      <h2 class="text-2xl font-semibold tracking-wide">
+        {isZh ? "项目" : "Projects"}
+      </h2>
       {
         projects.map(project => (
           <div class="mt-8">
@@ -134,7 +153,9 @@ const homePath = getRelativeLocaleUrl(locale, "");
               </a>
             </h3>
             <p class="font-mono text-sm opacity-70">{project.domain}</p>
-            <p class="mt-2">{project.description}</p>
+            <p class="mt-2">
+              {isZh ? project.descriptionZh : project.description}
+            </p>
           </div>
         ))
       }

@@ -3,7 +3,8 @@ import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
-import { getAssetPath } from "@/utils/withBase";
+import { getAssetPath, stripBase, stripLocale } from "@/utils/withBase";
+import { LOCALES, DEFAULT_LOCALE } from "@/i18n";
 import config from "@/config";
 import "@/styles/global.css";
 
@@ -12,6 +13,9 @@ type Props = {
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
+  // Locales in which this page actually exists; hreflang links are only
+  // emitted for these. Defaults to all locales (most pages exist in both).
+  alternateLocales?: string[];
 };
 
 const { site } = config;
@@ -21,19 +25,42 @@ const {
   description = site.description,
   ogImage = resolveDefaultOgImagePath(config),
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
+  alternateLocales,
 } = Astro.props;
 
+const locale = Astro.currentLocale ?? site.lang;
+// BCP 47 lang attribute per locale (Astro locale codes are short slugs).
+const htmlLangs: Record<string, string> = { en: "en", zh: "zh-CN" };
+const htmlLang = htmlLangs[locale] ?? locale;
+
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
-const rssHref = getRelativeLocaleUrl(
-  Astro.currentLocale ?? config.site.lang,
-  "rss.xml"
-);
+const rssHref = getRelativeLocaleUrl(locale, "rss.xml");
+
+// Locale-prefixed alternates of the current page for hreflang links.
+// Only emitted for locales where the page actually exists (alternateLocales).
+const currentPath = stripLocale(stripBase(Astro.url.pathname), locale);
+const alternateLinks = LOCALES.filter(
+  l => !alternateLocales || alternateLocales.includes(l)
+).map(l => ({
+  locale: l,
+  hreflang: htmlLangs[l] ?? l,
+  href: new URL(
+    getRelativeLocaleUrl(
+      l,
+      currentPath === "/" ? "" : currentPath.replace(/\/+$/, "")
+    ),
+    Astro.site
+  ).href,
+}));
+const xDefaultHref =
+  alternateLinks.find(l => l.locale === DEFAULT_LOCALE)?.href ??
+  alternateLinks[0]?.href;
 ---
 
 <!doctype html>
 <html
   dir={site.dir ?? "ltr"}
-  lang={Astro.currentLocale ?? site.lang}
+  lang={htmlLang}
   class="overflow-y-scroll scroll-smooth"
 >
   <head>
@@ -92,6 +119,14 @@ const rssHref = getRelativeLocaleUrl(
       title={site.title}
       href={new URL(rssHref, Astro.site)}
     />
+
+    <!-- Language alternates -->
+    {
+      alternateLinks.map(({ hreflang, href }) => (
+        <link rel="alternate" hreflang={hreflang} href={href} />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={xDefaultHref} />
 
     <!-- Filled at runtime by theme.ts to match the current background colour -->
     <meta name="theme-color" content="" />
