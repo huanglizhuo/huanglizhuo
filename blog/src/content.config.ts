@@ -34,4 +34,22 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { posts, pages };
+const projects = defineCollection({
+  loader: glob({
+    pattern: "**/[^_]*.{md,mdx}",
+    base: "./src/content/projects",
+  }),
+  schema: z.object({
+    title: z.string(),
+    tagline: z.string(),
+    url: z.string(),
+    domain: z.string(),
+    order: z.number().default(99),
+    facts: z.array(z.object({ label: z.string(), value: z.string() })),
+    faq: z
+      .array(z.object({ question: z.string(), answer: z.string() }))
+      .optional(),
+  }),
+});
+
+export const collections = { posts, pages, projects };

@@ -4,6 +4,7 @@ export default {
   nav: {
     home: "首页",
     posts: "文章",
+    projects: "项目",
     tags: "标签",
     about: "关于",
     archives: "归档",
@@ -46,6 +47,9 @@ export default {
 
     postsTitle: "文章",
     postsDesc: "我发布过的所有文章。",
+
+    projectsTitle: "项目",
+    projectsDesc: "我做过的项目。",
 
     archivesTitle: "归档",
     archivesDesc: "我归档的所有文章。",

@@ -1,0 +1,149 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { getContentLocale } from "@/utils/getPostPaths";
+import { LOCALES, DEFAULT_LOCALE, useTranslations } from "@/i18n";
+import config from "@/config";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+
+  return LOCALES.flatMap(locale =>
+    projects
+      .filter(
+        project =>
+          getContentLocale(project.filePath, "src/content/projects") === locale
+      )
+      .map(project => ({
+        params: {
+          locale: locale === DEFAULT_LOCALE ? undefined : locale,
+          slug: project.id.split("/").pop(),
+        },
+        props: { project },
+      }))
+  );
+}
+
+type Props = {
+  project: CollectionEntry<"projects">;
+};
+
+const { project } = Astro.props;
+const { title, tagline, url, domain, facts, faq } = project.data;
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+const { Content } = await render(project);
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      name: title,
+      description: tagline,
+      url,
+      inLanguage: locale === "zh" ? "zh-CN" : locale,
+      author: {
+        "@type": "Person",
+        name: config.site.author,
+        ...(config.site.profile && { url: config.site.profile }),
+      },
+    },
+    ...(faq?.length
+      ? [
+          {
+            "@type": "FAQPage",
+            mainEntity: faq.map(item => ({
+              "@type": "Question",
+              name: item.question,
+              acceptedAnswer: { "@type": "Answer", text: item.answer },
+            })),
+          },
+        ]
+      : []),
+  ],
+};
+---
+
+<Layout title={`${title} | ${config.site.title}`} description={tagline}>
+  <Fragment slot="head">
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(structuredData)}
+    />
+  </Fragment>
+
+  <Header />
+
+  <Breadcrumb />
+
+  <Main pageTitle={title} pageDesc={tagline}>
+    <div data-pagefind-body>
+      <table class="w-full border-collapse text-sm sm:text-base">
+        <tbody>
+          {
+            facts.map(fact => (
+              <tr class="border-border border-b">
+                <th class="text-muted-foreground py-2 pe-4 text-left align-top font-medium whitespace-nowrap">
+                  {fact.label}
+                </th>
+                <td class="py-2">{fact.value}</td>
+              </tr>
+            ))
+          }
+          <tr class="border-border border-b">
+            <th
+              class="text-muted-foreground py-2 pe-4 text-left align-top font-medium whitespace-nowrap"
+            >
+              {locale === "zh" ? "官网" : "Website"}
+            </th>
+            <td class="py-2">
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-accent font-mono hover:underline"
+              >
+                {domain}
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <article class="app-prose mt-8 w-full max-w-app">
+        <Content />
+      </article>
+
+      {
+        faq && faq.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-2xl font-semibold tracking-wide">FAQ</h2>
+            {faq.map(item => (
+              <div class="mt-4">
+                <h3 class="text-lg font-semibold">{item.question}</h3>
+                <p class="mt-1">{item.answer}</p>
+              </div>
+            ))}
+          </section>
+        )
+      }
+
+      <div class="my-8">
+        <LinkButton href={url} target="_blank" rel="noopener noreferrer">
+          {locale === "zh" ? "访问项目 →" : "Visit project →"}
+        </LinkButton>
+      </div>
+    </div>
+  </Main>
+
+  <Footer />
+</Layout>

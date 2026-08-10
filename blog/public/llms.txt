@@ -10,17 +10,19 @@ Author: Huang Lizhuo
 
 - [Home](https://blog.clothpath.com/): About the author and featured projects
 - [Posts](https://blog.clothpath.com/posts/): All blog posts (English)
+- [Projects](https://blog.clothpath.com/projects/): Project pages with facts and FAQs (English)
 - [About](https://blog.clothpath.com/about/): About the author and his projects
 - [首页](https://blog.clothpath.com/zh/): 中文版首页
 - [文章](https://blog.clothpath.com/zh/posts/): 全部文章（中文）
+- [项目](https://blog.clothpath.com/zh/projects/): 项目介绍（中文，含事实表与 FAQ）
 - [关于](https://blog.clothpath.com/zh/about/): 关于作者（中文）
 
 ## Projects
 
-- [OctoCounts](https://octocounts.com/): Free SLOC counter for public GitHub repositories (web app + browser extension)
-- [EchoPod](https://echopod.clothpath.com/): Language learning app built around AI subtitles for podcasts
-- [Ketsuin 結印](https://ketsuin.clothpath.com/): Web-based input method using ninja hand signs detected in the browser
-- [QwenASR](https://github.com/huanglizhuo/QwenASR): Pure-Rust, CPU-only inference engine for Qwen3-ASR speech-to-text
+- [OctoCounts](https://blog.clothpath.com/projects/octocounts/): Free SLOC counter for public GitHub repositories (web app + browser extension). Official site: https://octocounts.com/
+- [EchoPod](https://blog.clothpath.com/projects/echopod/): Language learning app built around AI subtitles for podcasts. Official site: https://echopod.clothpath.com/
+- [Ketsuin 結印](https://blog.clothpath.com/projects/ketsuin/): Web-based input method using ninja hand signs detected in the browser. Official site: https://ketsuin.clothpath.com/
+- [QwenASR](https://blog.clothpath.com/projects/qwenasr/): Pure-Rust, CPU-only inference engine for Qwen3-ASR speech-to-text. Repo: https://github.com/huanglizhuo/QwenASR
 
 ## Feeds
 

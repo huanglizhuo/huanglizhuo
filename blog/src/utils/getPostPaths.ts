@@ -16,15 +16,30 @@ function getPostDirSegments(filePath: string | undefined): string[] {
 }
 
 /**
+ * Returns the locale of a content entry based on its directory:
+ * `<base>/zh/foo.md` → "zh". Entries outside a locale directory
+ * (e.g. flat `<base>/foo.md`) default to the default locale.
+ */
+export function getContentLocale(
+  filePath: string | undefined,
+  basePath: string
+): Locale {
+  const firstSegment = filePath
+    ?.replace(basePath, "")
+    .split("/")
+    .filter(Boolean)[0];
+  return (LOCALES as readonly string[]).includes(firstSegment ?? "")
+    ? (firstSegment as Locale)
+    : DEFAULT_LOCALE;
+}
+
+/**
  * Returns the locale of a post based on its directory:
  * `posts/zh/foo.md` → "zh". Posts outside a locale directory
  * (e.g. flat `posts/foo.md`) default to the default locale.
  */
 export function getPostLocale(filePath: string | undefined): Locale {
-  const firstSegment = getPostDirSegments(filePath)[0];
-  return (LOCALES as readonly string[]).includes(firstSegment ?? "")
-    ? (firstSegment as Locale)
-    : DEFAULT_LOCALE;
+  return getContentLocale(filePath, BLOG_PATH);
 }
 
 function getPostPathSegments(filePath: string | undefined): string[] {
