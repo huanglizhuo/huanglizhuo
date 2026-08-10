@@ -10,6 +10,8 @@ type Props = {
   pubDatetime?: Date;
   modDatetime?: Date | null;
   alternateLocales?: string[];
+  // Raw post title for the BlogPosting schema headline (no site-name suffix).
+  headline?: string;
 };
 
 const { site } = config;
@@ -22,13 +24,19 @@ const {
   pubDatetime,
   modDatetime,
   alternateLocales,
+  headline,
 } = Astro.props;
+
+const locale = Astro.currentLocale ?? site.lang;
+const pageUrl = canonicalURL ?? new URL(Astro.url.pathname, Astro.site).href;
 
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  headline: title ?? site.title,
+  headline: headline ?? title ?? site.title,
   image: ogImage,
+  inLanguage: locale === "zh" ? "zh-CN" : locale,
+  mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl },
   ...(pubDatetime && { datePublished: pubDatetime.toISOString() }),
   ...(modDatetime && { dateModified: modDatetime.toISOString() }),
   author: [
@@ -38,6 +46,11 @@ const structuredData = {
       ...(site.profile && { url: site.profile }),
     },
   ],
+  publisher: {
+    "@type": "Person",
+    name: site.author,
+    ...(site.profile && { url: site.profile }),
+  },
 };
 ---
 

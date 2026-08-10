@@ -107,6 +107,7 @@ const {
   description,
   ogImage: initOgImage,
   canonicalURL,
+  author,
   pubDatetime,
   modDatetime,
   timezone,
@@ -139,6 +140,7 @@ const ogImage = ogImageUrl
 
 <PostLayout
   title={`${title} | ${config.site.title}`}
+  headline={title}
   description={description}
   ogImage={ogImage}
   canonicalURL={canonicalURL}
@@ -163,6 +165,17 @@ const ogImage = ogImageUrl
     </h1>
 
     <div class="my-2 flex items-center gap-2">
+      <a
+        href={config.site.profile}
+        target="_blank"
+        rel="author noopener noreferrer"
+        class="text-muted-foreground hover:text-accent text-sm sm:text-base"
+      >
+        {author}
+      </a>
+      <span aria-hidden="true" class="text-muted-foreground">
+        ·
+      </span>
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
       <span
         aria-hidden="true"

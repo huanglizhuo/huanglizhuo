@@ -26,6 +26,13 @@ export default defineConfig({
     sitemap({
       filter: page =>
         config.features?.showArchives !== false || !page.endsWith("/archives/"),
+      i18n: {
+        defaultLocale: "en",
+        locales: {
+          en: "en",
+          zh: "zh-CN",
+        },
+      },
     }),
   ],
   i18n: {

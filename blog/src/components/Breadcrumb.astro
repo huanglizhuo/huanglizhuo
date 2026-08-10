@@ -55,9 +55,38 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
     }`
   );
 }
+
+// BreadcrumbList structured data, built from the raw (unmutated) path segments.
+const rawSegments = currentUrlPath.split("/").slice(1).filter(Boolean);
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: t.nav.home,
+      item: new URL(getRelativeLocaleUrl(locale, ""), Astro.site).href,
+    },
+    ...rawSegments.map((segment, index) => ({
+      "@type": "ListItem",
+      position: index + 2,
+      name: navLabels[segment] ?? decodeSegment(segment),
+      item: new URL(
+        getRelativeLocaleUrl(locale, rawSegments.slice(0, index + 1).join("/")),
+        Astro.site
+      ).href,
+    })),
+  ],
+};
 ---
 
 <nav class="app-layout mt-8 mb-1" aria-label="breadcrumb">
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(breadcrumbSchema)}
+  />
   <ul
     class="flex flex-wrap items-center gap-x-1 font-light [&>li:not(:last-child)>a]:hover:opacity-100"
   >

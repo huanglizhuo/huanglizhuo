@@ -55,6 +55,25 @@ const alternateLinks = LOCALES.filter(
 const xDefaultHref =
   alternateLinks.find(l => l.locale === DEFAULT_LOCALE)?.href ??
   alternateLinks[0]?.href;
+
+// Site-wide entity graph: WebSite + author Person with social sameAs links.
+const siteSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      name: site.title,
+      url: site.url,
+      inLanguage: htmlLang,
+    },
+    {
+      "@type": "Person",
+      name: site.author,
+      ...(site.profile && { url: site.profile }),
+      sameAs: config.socials.map(social => social.url),
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -127,6 +146,13 @@ const xDefaultHref =
       ))
     }
     <link rel="alternate" hreflang="x-default" href={xDefaultHref} />
+
+    <!-- Site-wide entity graph -->
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(siteSchema)}
+    />
 
     <!-- Filled at runtime by theme.ts to match the current background colour -->
     <meta name="theme-color" content="" />
