@@ -3,7 +3,7 @@ title: QwenASR
 tagline: A fast, pure-Rust, CPU-only inference engine for Qwen3-ASR speech-to-text, tuned for Apple Silicon.
 url: https://github.com/huanglizhuo/QwenASR
 domain: github.com/huanglizhuo/QwenASR
-order: 4
+order: 5
 facts:
   - label: Tech stack
     value: Pure Rust, CPU-only — no Python, no GPU, no tensor framework, only libc

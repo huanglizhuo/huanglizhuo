@@ -3,7 +3,7 @@ title: OctoCounts
 tagline: A free SLOC counter for public GitHub repositories, as a web app and a browser extension.
 url: https://octocounts.com/
 domain: octocounts.com
-order: 1
+order: 2
 facts:
   - label: Type
     value: Web app + browser extension (Chrome / Edge / Firefox)

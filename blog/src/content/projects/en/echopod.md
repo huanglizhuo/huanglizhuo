@@ -3,7 +3,7 @@ title: EchoPod
 tagline: A language-learning app that turns your favorite podcasts into interactive bilingual study material with AI subtitles.
 url: https://echopod.clothpath.com/
 domain: echopod.clothpath.com
-order: 2
+order: 1
 facts:
   - label: Platforms
     value: iOS (App Store); Android (alpha program)

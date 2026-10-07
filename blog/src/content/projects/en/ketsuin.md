@@ -3,7 +3,7 @@ title: Ketsuin 結印
 tagline: A web-based input method that lets you type with ninja hand signs, detected entirely in your browser.
 url: https://ketsuin.clothpath.com/
 domain: ketsuin.clothpath.com
-order: 3
+order: 4
 facts:
   - label: Input
     value: 12 classic ninja seals via webcam

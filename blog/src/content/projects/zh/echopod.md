@@ -3,7 +3,7 @@ title: EchoPod
 tagline: 基于 AI 字幕的语言学习应用，把你喜欢的播客变成互动式双语学习材料。
 url: https://echopod.clothpath.com/
 domain: echopod.clothpath.com
-order: 2
+order: 1
 facts:
   - label: 平台
     value: iOS（App Store）；Android（内测中）

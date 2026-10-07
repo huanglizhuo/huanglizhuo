@@ -3,7 +3,7 @@
 Huang's personal site, built with [Astro](https://astro.build) and the
 [AstroPaper](https://github.com/satnaing/astro-paper) theme, deployed to Cloudflare Pages.
 
-- `/` — projects (OctoCounts, EchoPod, Ketsuin, QwenASR) + recent posts
+- `/` — projects (EchoPod, OctoCounts, FuseBar, Ketsuin, QwenASR) + recent posts
 - `/posts` — blog posts (Markdown in `src/content/posts/`)
 - `/about` — about page (`src/content/pages/about.md`)
 

@@ -6,8 +6,9 @@ I'm Huang, a software engineer who enjoys learning different things and turning 
 
 Things I've built:
 
-- [OctoCounts](https://octocounts.com/) — a free SLOC counter for public GitHub repositories, as a web app and a browser extension.
 - [EchoPod](https://echopod.clothpath.com/) — language learning with AI subtitles, built around your favorite podcasts.
+- [OctoCounts](https://octocounts.com/) — a free SLOC counter for public GitHub repositories, as a web app and a browser extension.
+- [FuseBar](https://github.com/huanglizhuo/FuseBar) — a free macOS menu bar app for system status, running apps, and project shortcuts.
 - [Ketsuin 結印](https://ketsuin.clothpath.com/) — type with ninja hand signs, detected in your browser.
 - [QwenASR](https://github.com/huanglizhuo/QwenASR) — a pure-Rust, CPU-only inference engine for Qwen3-ASR speech-to-text.
 

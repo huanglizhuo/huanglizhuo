@@ -19,8 +19,9 @@ Author: Huang Lizhuo
 
 ## Projects
 
-- [OctoCounts](https://blog.clothpath.com/projects/octocounts/): Free SLOC counter for public GitHub repositories (web app + browser extension). Official site: https://octocounts.com/
 - [EchoPod](https://blog.clothpath.com/projects/echopod/): Language learning app built around AI subtitles for podcasts. Official site: https://echopod.clothpath.com/
+- [OctoCounts](https://blog.clothpath.com/projects/octocounts/): Free SLOC counter for public GitHub repositories (web app + browser extension). Official site: https://octocounts.com/
+- [FuseBar](https://blog.clothpath.com/projects/fusebar/): Free native macOS menu bar app for system status, running apps, and project shortcuts. Repo: https://github.com/huanglizhuo/FuseBar
 - [Ketsuin 結印](https://blog.clothpath.com/projects/ketsuin/): Web-based input method using ninja hand signs detected in the browser. Official site: https://ketsuin.clothpath.com/
 - [QwenASR](https://blog.clothpath.com/projects/qwenasr/): Pure-Rust, CPU-only inference engine for Qwen3-ASR speech-to-text. Repo: https://github.com/huanglizhuo/QwenASR
 
