@@ -16,6 +16,8 @@ type Props = {
   // Locales in which this page actually exists; hreflang links are only
   // emitted for these. Defaults to all locales (most pages exist in both).
   alternateLocales?: string[];
+  // Widen the shared column (header, main, footer) for the project grid.
+  wide?: boolean;
 };
 
 const { site } = config;
@@ -26,6 +28,7 @@ const {
   ogImage = resolveDefaultOgImagePath(config),
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
   alternateLocales,
+  wide = false,
 } = Astro.props;
 
 const locale = Astro.currentLocale ?? site.lang;
@@ -191,11 +194,13 @@ const siteSchema = {
     <ClientRouter />
   </head>
   <body
+    data-wide={wide || undefined}
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
   >
     <slot />
     <script>
       import "@/scripts/theme";
+      import "@/scripts/shaders";
     </script>
   </body>
 </html>

@@ -4,6 +4,10 @@ tagline: A free SLOC counter for public GitHub repositories, as a web app and a 
 url: https://octocounts.com/
 domain: octocounts.com
 order: 2
+highlights:
+  - Rust · Axum
+  - tokei · 200+ languages
+  - Free
 facts:
   - label: Type
     value: Web app + browser extension (Chrome / Edge / Firefox)

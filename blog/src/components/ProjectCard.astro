@@ -1,0 +1,58 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import ProjectStage from "./ProjectStage.astro";
+import config from "@/config";
+
+type Props = {
+  project: CollectionEntry<"projects">;
+  variant?: "h2" | "h3";
+  // Span both grid columns with a wider stage.
+  wide?: boolean;
+};
+
+const { project, variant: Heading = "h3", wide = false } = Astro.props;
+const { title, tagline, url, domain, highlights } = project.data;
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const slug = project.id.split("/").pop() ?? project.id;
+const projectUrl = getRelativeLocaleUrl(locale, `projects/${slug}`);
+---
+
+<article
+  class:list={[
+    "group bg-surface border-border flex min-w-0 flex-col overflow-hidden rounded-xl border",
+    { "sm:col-span-2": wide },
+  ]}
+>
+  <a href={projectUrl} tabindex="-1" aria-hidden="true">
+    <ProjectStage {slug} {title} variant={wide ? "wide" : "card"} />
+  </a>
+  <div class="flex min-w-0 flex-col gap-2 p-5">
+    <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+      <Heading class="text-lg font-semibold">
+        <a href={projectUrl} class="hover:text-accent">{title}</a>
+      </Heading>
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-muted-foreground hover:text-accent text-xs break-all"
+      >
+        {domain}
+      </a>
+    </div>
+    <p class="font-sans">{tagline}</p>
+    {
+      highlights.length > 0 && (
+        <ul class="flex flex-wrap gap-1.5">
+          {highlights.map(item => (
+            <li class="border-border text-muted-foreground rounded-full border px-2.5 py-1 text-xs">
+              {item}
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</article>

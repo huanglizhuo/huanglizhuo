@@ -4,6 +4,10 @@ tagline: 快速、纯 Rust、仅 CPU 的 Qwen3-ASR 语音转文字推理引擎�
 url: https://github.com/huanglizhuo/QwenASR
 domain: github.com/huanglizhuo/QwenASR
 order: 5
+highlights:
+  - 纯 Rust · 仅 CPU
+  - 46× 实时
+  - cargo install
 facts:
   - label: 技术栈
     value: 纯 Rust、仅 CPU——无 Python、无 GPU、无张量框架，只依赖 libc

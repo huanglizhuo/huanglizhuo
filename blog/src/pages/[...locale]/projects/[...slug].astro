@@ -6,6 +6,7 @@ import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
 import LinkButton from "@/components/LinkButton.astro";
+import ProjectStage from "@/components/ProjectStage.astro";
 import { getContentLocale } from "@/utils/getPostPaths";
 import { LOCALES, DEFAULT_LOCALE, useTranslations } from "@/i18n";
 import config from "@/config";
@@ -35,6 +36,7 @@ type Props = {
 
 const { project } = Astro.props;
 const { title, tagline, url, domain, facts, faq } = project.data;
+const slug = project.id.split("/").pop() ?? project.id;
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
@@ -86,7 +88,9 @@ const structuredData = {
   <Breadcrumb />
 
   <Main pageTitle={title} pageDesc={tagline}>
-    <div data-pagefind-body>
+    <ProjectStage {slug} {title} variant="banner" />
+
+    <div data-pagefind-body class="mt-8">
       <table class="w-full border-collapse text-sm sm:text-base">
         <tbody>
           {
@@ -130,7 +134,7 @@ const structuredData = {
             {faq.map(item => (
               <div class="mt-4">
                 <h3 class="text-lg font-semibold">{item.question}</h3>
-                <p class="mt-1">{item.answer}</p>
+                <p class="mt-1 font-sans">{item.answer}</p>
               </div>
             ))}
           </section>

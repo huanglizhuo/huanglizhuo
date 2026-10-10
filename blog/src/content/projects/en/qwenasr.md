@@ -4,6 +4,10 @@ tagline: A fast, pure-Rust, CPU-only inference engine for Qwen3-ASR speech-to-te
 url: https://github.com/huanglizhuo/QwenASR
 domain: github.com/huanglizhuo/QwenASR
 order: 5
+highlights:
+  - Pure Rust · CPU only
+  - 46× realtime
+  - cargo install
 facts:
   - label: Tech stack
     value: Pure Rust, CPU-only — no Python, no GPU, no tensor framework, only libc
