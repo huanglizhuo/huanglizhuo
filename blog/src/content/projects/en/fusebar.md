@@ -4,6 +4,10 @@ tagline: A free native macOS menu bar app that puts system status, running apps,
 url: https://github.com/huanglizhuo/FuseBar
 domain: github.com/huanglizhuo/FuseBar
 order: 3
+highlights:
+  - macOS 14+
+  - Free · no analytics
+  - Data stays on your Mac
 facts:
   - label: Platform
     value: macOS 14 or later (Apple silicon and Intel)

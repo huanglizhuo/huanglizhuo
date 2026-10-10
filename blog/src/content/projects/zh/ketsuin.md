@@ -4,6 +4,10 @@ tagline: 用忍者手印打字的网页输入法，识别完全在浏览器内�
 url: https://ketsuin.clothpath.com/
 domain: ketsuin.clothpath.com
 order: 4
+highlights:
+  - 12 种手印
+  - YOLOX-Nano · WASM
+  - 数据不出设备
 facts:
   - label: 输入方式
     value: 通过摄像头结 12 种经典印

@@ -4,6 +4,10 @@ tagline: 免费的 GitHub 公开仓库代码行数统计工具，有网页版和
 url: https://octocounts.com/
 domain: octocounts.com
 order: 2
+highlights:
+  - Rust · Axum
+  - tokei · 200+ 语言
+  - 免费
 facts:
   - label: 形态
     value: 网页应用 + 浏览器扩展（Chrome / Edge / Firefox）

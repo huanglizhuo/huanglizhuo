@@ -4,6 +4,10 @@ tagline: 基于 AI 字幕的语言学习应用，把你喜欢的播客变成互�
 url: https://echopod.clothpath.com/
 domain: echopod.clothpath.com
 order: 1
+highlights:
+  - iOS · Android 内测
+  - 同步 AI 字幕
+  - 听力与口语
 facts:
   - label: 平台
     value: iOS（App Store）；Android（内测中）

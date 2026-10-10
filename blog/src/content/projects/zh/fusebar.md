@@ -4,6 +4,10 @@ tagline: 免费的 macOS 原生菜单栏应用，把系统状态、运行中的�
 url: https://github.com/huanglizhuo/FuseBar
 domain: github.com/huanglizhuo/FuseBar
 order: 3
+highlights:
+  - macOS 14+
+  - 免费 · 无统计
+  - 数据只在本机
 facts:
   - label: 平台
     value: macOS 14 及以上（Apple 芯片与 Intel）

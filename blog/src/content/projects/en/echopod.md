@@ -4,6 +4,10 @@ tagline: A language-learning app that turns your favorite podcasts into interact
 url: https://echopod.clothpath.com/
 domain: echopod.clothpath.com
 order: 1
+highlights:
+  - iOS · Android alpha
+  - Synced AI subtitles
+  - Listening & speaking
 facts:
   - label: Platforms
     value: iOS (App Store); Android (alpha program)

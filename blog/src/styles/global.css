@@ -30,10 +30,118 @@
   @apply max-w-app mx-auto w-full px-4;
 }
 
+/* Pages with a project grid (home) widen the shared column */
+[data-wide] .app-layout {
+  @apply max-w-5xl;
+}
+
 @utility active-nav {
   @apply underline decoration-wavy decoration-2 underline-offset-8;
 }
 
 :target {
   scroll-margin-block: 1rem;
+}
+
+/* ===== Shader canvases (src/scripts/shaders.ts) =====
+   A canvas stays transparent until its shader draws, so the element's own
+   background is the static fallback: no WebGPU, reduced motion, save-data. */
+[data-shader] canvas {
+  @apply absolute inset-0 block opacity-0 transition-opacity duration-700;
+}
+
+[data-shader].is-live canvas {
+  @apply opacity-100;
+}
+
+/* Home hero: ASCII field across the full width, dimmed behind the intro */
+.hero-art {
+  @apply relative h-52;
+  mask-image: linear-gradient(180deg, #000 55%, transparent);
+}
+
+@media (width >= 40rem) {
+  .hero-art {
+    @apply absolute inset-0 h-auto;
+    mask-image: linear-gradient(
+      90deg,
+      rgb(0 0 0 / 0.2),
+      rgb(0 0 0 / 0.2) 45%,
+      #000 75%
+    );
+  }
+}
+
+.hero-art::before {
+  content: "";
+  @apply absolute inset-0 opacity-50 transition-opacity duration-700;
+  background-image: radial-gradient(
+    circle,
+    var(--glyph) 1px,
+    transparent 1.6px
+  );
+  background-size: 15px 15px;
+}
+
+.hero-art.is-live::before {
+  @apply opacity-0;
+}
+
+/* 404: a flat line until the "signal lost" shader takes over */
+[data-shader="lost"] {
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 20%,
+    #000 80%,
+    transparent
+  );
+  background: linear-gradient(
+    transparent calc(50% - 1px),
+    var(--accent) calc(50% - 1px) calc(50% + 1px),
+    transparent calc(50% + 1px)
+  );
+}
+
+/* Project stages: brand-coloured stills behind each screenshot */
+[data-shader="echopod"] {
+  background: radial-gradient(
+    120% 130% at 25% 40%,
+    #155e57,
+    #0f2e33 38%,
+    #0b1220 78%
+  );
+}
+
+[data-shader="octocounts"] {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgb(57 255 136 / 0.12) 0 1px,
+      transparent 1px 22px
+    ),
+    #050806;
+}
+
+[data-shader="fusebar"] {
+  background: linear-gradient(
+    135deg,
+    #14306e,
+    #2f62e8 40%,
+    #7fa6ff 62%,
+    #f4c3a1 88%
+  );
+}
+
+[data-shader="ketsuin"] {
+  background: radial-gradient(
+    70% 95% at 15% 100%,
+    #8a3a0c,
+    #2a1306 48%,
+    #0a0806 82%
+  );
+}
+
+[data-shader="qwenasr"] {
+  background: radial-gradient(90% 75% at 30% 25%, #3a1d0e, #0d1117 72%);
 }

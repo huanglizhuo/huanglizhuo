@@ -46,6 +46,8 @@ const projects = defineCollection({
     domain: z.string(),
     order: z.number().default(99),
     facts: z.array(z.object({ label: z.string(), value: z.string() })),
+    // Short chips shown on project cards.
+    highlights: z.array(z.string()).default([]),
     faq: z
       .array(z.object({ question: z.string(), answer: z.string() }))
       .optional(),

@@ -4,6 +4,10 @@ tagline: A web-based input method that lets you type with ninja hand signs, dete
 url: https://ketsuin.clothpath.com/
 domain: ketsuin.clothpath.com
 order: 4
+highlights:
+  - 12 hand signs
+  - YOLOX-Nano · WASM
+  - Nothing leaves your device
 facts:
   - label: Input
     value: 12 classic ninja seals via webcam

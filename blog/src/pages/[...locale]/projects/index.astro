@@ -1,11 +1,11 @@
 ---
 import { getCollection } from "astro:content";
-import { getRelativeLocaleUrl } from "astro:i18n";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
 import { getContentLocale } from "@/utils/getPostPaths";
 import { getLocaleStaticPaths, useTranslations } from "@/i18n";
 import config from "@/config";
@@ -20,44 +20,25 @@ const t = useTranslations(locale);
 const projects = (await getCollection("projects"))
   .filter(project => getContentLocale(project.filePath, "src/content/projects") === locale)
   .sort((a, b) => a.data.order - b.data.order);
-
-const projectSlug = (id: string) => id.split("/").pop();
 ---
 
-<Layout title={`${t.pages.projectsTitle} | ${config.site.title}`}>
+<Layout title={`${t.pages.projectsTitle} | ${config.site.title}`} wide>
   <Header />
 
   <Breadcrumb />
 
   <Main pageTitle={t.pages.projectsTitle} pageDesc={t.pages.projectsDesc}>
-    <ul>
+    <div class="grid gap-5 pb-6 sm:grid-cols-2">
       {
-        projects.map(({ id, data }) => (
-          <li class="mt-8">
-            <h2 class="text-xl font-semibold">
-              <a
-                href={getRelativeLocaleUrl(
-                  locale,
-                  `projects/${projectSlug(id)}`
-                )}
-                class="hover:text-accent"
-              >
-                {data.title}
-              </a>
-            </h2>
-            <a
-              href={data.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="font-mono text-sm opacity-70 hover:opacity-100"
-            >
-              {data.domain}
-            </a>
-            <p class="mt-2">{data.tagline}</p>
-          </li>
+        projects.map((project, i) => (
+          <ProjectCard
+            {project}
+            variant="h2"
+            wide={i === 0 && projects.length % 2 === 1}
+          />
         ))
       }
-    </ul>
+    </div>
   </Main>
 
   <Footer />
