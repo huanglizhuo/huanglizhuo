@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import ProjectStage from "./ProjectStage.astro";
+import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import config from "@/config";
 
 type Props = {
@@ -20,39 +21,131 @@ const projectUrl = getRelativeLocaleUrl(locale, `projects/${slug}`);
 ---
 
 <article
-  class:list={[
-    "group bg-surface border-border flex min-w-0 flex-col overflow-hidden rounded-xl border",
-    { "sm:col-span-2": wide },
-  ]}
+  class:list={["project-card group", { "project-wide sm:col-span-2": wide }]}
 >
-  <a href={projectUrl} tabindex="-1" aria-hidden="true">
+  <a href={projectUrl} class="project-preview" tabindex="-1" aria-hidden="true">
     <ProjectStage {slug} {title} variant={wide ? "wide" : "card"} />
   </a>
-  <div class="flex min-w-0 flex-col gap-2 p-5">
-    <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-      <Heading class="text-lg font-semibold">
-        <a href={projectUrl} class="hover:text-accent">{title}</a>
-      </Heading>
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-muted-foreground hover:text-accent text-xs break-all"
-      >
-        {domain}
+  <div class="project-caption">
+    <Heading>
+      <a href={projectUrl}>
+        {title}
+        <IconArrowRight width={24} height={24} aria-hidden="true" />
       </a>
-    </div>
-    <p class="font-sans">{tagline}</p>
+    </Heading>
+    <p>{tagline}</p>
     {
       highlights.length > 0 && (
-        <ul class="flex flex-wrap gap-1.5">
+        <ul class="project-highlights">
           {highlights.map(item => (
-            <li class="border-border text-muted-foreground rounded-full border px-2.5 py-1 text-xs">
-              {item}
-            </li>
+            <li>{item}</li>
           ))}
         </ul>
       )
     }
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="project-domain"
+    >
+      {domain}
+      <IconArrowRight width={16} height={16} aria-hidden="true" />
+    </a>
   </div>
 </article>
+
+<style>
+  .project-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .project-preview {
+    display: block;
+  }
+  .project-caption {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+  }
+  h2,
+  h3 {
+    width: 100%;
+    font-size: 1.75rem;
+    line-height: 1.2;
+    font-weight: 600;
+  }
+  h2 a,
+  h3 a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  h2 a:hover,
+  h3 a:hover {
+    color: var(--accent);
+  }
+  h2 svg,
+  h3 svg {
+    flex-shrink: 0;
+    color: var(--accent);
+  }
+  p {
+    margin-top: 0.75rem;
+    max-width: 60ch;
+    line-height: 1.7;
+  }
+  .project-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    margin-top: 1rem;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+  }
+  .project-highlights li {
+    padding-block: 0.125rem;
+  }
+  .project-domain {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    margin-top: 0.75rem;
+    color: var(--accent);
+    overflow-wrap: anywhere;
+    font-size: 0.8125rem;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .project-domain svg {
+    flex-shrink: 0;
+    transform: rotate(-45deg);
+  }
+  @media (min-width: 640px) {
+    .project-wide {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 2rem;
+      align-items: center;
+      padding-block: 0.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .project-wide .project-preview {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .project-wide .project-caption {
+      grid-column: 1;
+      grid-row: 1;
+      padding-right: 1rem;
+    }
+    .project-wide h2,
+    .project-wide h3 {
+      font-size: clamp(2rem, 4vw, 3rem);
+    }
+  }
+</style>

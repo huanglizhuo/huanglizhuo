@@ -67,6 +67,14 @@ export default defineConfig({
   },
   fonts: [
     {
+      name: "Bricolage Grotesque",
+      cssVariable: "--font-display",
+      provider: fontProviders.google(),
+      fallbacks: ["sans-serif"],
+      weights: [500, 600, 700],
+      styles: ["normal"],
+    },
+    {
       name: "Google Sans Code",
       cssVariable: "--font-google-sans-code",
       provider: fontProviders.google(),

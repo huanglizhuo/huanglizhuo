@@ -22,21 +22,15 @@ const projectImages: Record<string, ImageMetadata> = {
   qwenasr: qwenasrImg,
 };
 
-// The project's shader (src/scripts/shaders.ts) plays behind its screenshot.
 const { slug, title, variant = "card" } = Astro.props;
 const image = projectImages[slug];
 ---
 
 <div
-  data-shader={slug}
+  data-project={slug}
   transition:name={`project-${slug}`}
-  class:list={[
-    "relative isolate overflow-hidden",
-    variant === "wide" ? "aspect-16/10 sm:aspect-21/9" : "aspect-16/10",
-    { "rounded-lg": variant === "banner" },
-  ]}
+  class:list={["project-stage", { "project-banner": variant === "banner" }]}
 >
-  <canvas aria-hidden="true" style="width: 100%; height: 100%"></canvas>
   {
     image && (
       <Image
@@ -44,17 +38,83 @@ const image = projectImages[slug];
         alt={`${title} preview`}
         widths={[480, 800, 1280]}
         sizes={
-          variant === "card"
-            ? "(min-width: 640px) 380px, 76vw"
-            : "(min-width: 640px) 600px, 76vw"
+          variant === "banner"
+            ? "(min-width: 768px) 700px, 90vw"
+            : "(min-width: 1200px) 580px, (min-width: 640px) 45vw, 90vw"
         }
-        loading={variant === "banner" ? "eager" : "lazy"}
-        class:list={[
-          "absolute right-[4%] -bottom-[10%] z-10 w-[76%] rounded-lg shadow-2xl ring-1 ring-white/10",
-          "transition-transform duration-500 group-hover:-translate-y-2 motion-reduce:transition-none motion-reduce:group-hover:translate-y-0",
-          { "sm:-bottom-[16%] sm:w-[60%]": variant === "wide" },
-        ]}
+        loading={variant === "card" ? "lazy" : "eager"}
+        class="project-image"
       />
     )
   }
 </div>
+
+<style>
+  .project-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 2rem;
+    aspect-ratio: 4 / 3;
+    background: #c8d8eb;
+  }
+  .project-image {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 12px 24px rgb(15 30 60 / 0.16);
+    transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  :global(.project-card:hover) .project-image,
+  :global(.project-card:focus-within) .project-image {
+    transform: translateY(-5px);
+  }
+  [data-project="echopod"] {
+    background: #b7d8cf;
+  }
+  [data-project="octocounts"] {
+    background: #c6cee9;
+  }
+  [data-project="fusebar"] {
+    background: #b6cbed;
+  }
+  [data-project="ketsuin"] {
+    background: #e4cfb8;
+  }
+  [data-project="qwenasr"] {
+    background: #d6c6df;
+  }
+  :global([data-theme="dark"]) .project-stage {
+    background: #273953;
+  }
+  :global([data-theme="dark"]) [data-project="echopod"] {
+    background: #234941;
+  }
+  :global([data-theme="dark"]) [data-project="octocounts"] {
+    background: #303957;
+  }
+  :global([data-theme="dark"]) [data-project="ketsuin"] {
+    background: #4b3c2f;
+  }
+  :global([data-theme="dark"]) [data-project="qwenasr"] {
+    background: #44364e;
+  }
+  .project-banner {
+    aspect-ratio: 16 / 10;
+    padding: 2.5rem;
+  }
+  @media (max-width: 639px) {
+    .project-stage {
+      padding: 1.5rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .project-image {
+      transition: none;
+      transform: none !important;
+    }
+  }
+</style>

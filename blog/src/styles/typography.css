@@ -3,7 +3,7 @@
 @layer base {
   /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
-    /* Running text in the system sans; headings keep the mono display face */
+    /* Reading text follows the shared system sans stack. */
     @apply prose font-sans;
 
     h1,
