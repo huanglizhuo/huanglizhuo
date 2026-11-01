@@ -8,33 +8,33 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  --font-app: var(--font-google-sans-code);
+  --font-app: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
-/* Light theme values: neutral greys, one seal-red accent */
+/* Collection catalogue: cool paper and cobalt ink. */
 :root,
 [data-theme="light"] {
-  --background: #f5f6f7;
-  --foreground: #16181b;
+  --background: #eef0fb;
+  --foreground: #182443;
   --surface: #ffffff;
-  --accent: #b42318;
+  --accent: #294acb;
   --accent-foreground: #ffffff;
-  --muted: #e8eaed;
-  --muted-foreground: #5b6068;
-  --border: #e1e4e8;
-  /* Character tone of the home hero shader */
-  --glyph: #8d939b;
+  --muted: #dce2f4;
+  --muted-foreground: #526183;
+  --border: #c9d2eb;
+  /* Tone retained for the existing shader presets. */
+  --glyph: #7589bd;
 }
 
 /* Dark theme values */
 [data-theme="dark"] {
-  --background: #0e0f11;
-  --foreground: #e8eaed;
-  --surface: #15171a;
-  --accent: #ff6b5b;
-  --accent-foreground: #0e0f11;
-  --muted: #23262b;
-  --muted-foreground: #9aa0a8;
-  --border: #25282d;
-  --glyph: #6b737d;
+  --background: #10182b;
+  --foreground: #edf1ff;
+  --surface: #18243b;
+  --accent: #a6b8ff;
+  --accent-foreground: #10182b;
+  --muted: #24324d;
+  --muted-foreground: #b0bdd8;
+  --border: #33415e;
+  --glyph: #6d83b5;
 }
